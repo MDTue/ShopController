@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService {
@@ -19,13 +21,19 @@ public class ProductService {
         products.add(product);
     }
 
+
+
     public Product getProduct(String id) {
-        for (Product p : products) {
+        Optional<Product> result = products.stream()
+                .filter(p-> id.equals(p.getId()))
+                .findFirst();
+        return result.orElseThrow(()->new IllegalArgumentException("ID nicht gefunden"));
+
+        /*for (Product p : products) {
             if (id.equals(p.getId())) {
                 return p;
             }
-        }
-        return null;
+        }*/
     }
 
     public Product getProductByName(String name) {
